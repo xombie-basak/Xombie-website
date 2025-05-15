@@ -1,0 +1,634 @@
+<!DOCTYPE html>‎<!DOCTYPE html>
+‎<html lang="bn">
+‎<head>
+‎  <meta charset="UTF-8" />
+‎  <title>Stylish Website / স্টাইলিশ ওয়েবসাইট</title>
+‎  <style>
+‎    :root {
+‎      --green: #2ecc71;
+‎      --red: #e74c3c;
+‎      --black: #2c3e50;
+‎      --white: #ffffff;
+‎    }
+‎
+‎    * {
+‎      margin: 0;
+‎      padding: 0;
+‎      box-sizing: border-box;
+‎      font-family: 'Arial', sans-serif;
+‎    }
+‎
+‎    body {
+‎      background-color: var(--white);
+‎      position: relative;
+‎      min-height: 100vh;
+‎    }
+‎
+‎    /* Language selector */
+‎    #langSelector {
+‎      position: fixed;
+‎      top: 15px;
+‎      right: 15px;
+‎      background: var(--black);
+‎      color: var(--white);
+‎      padding: 5px 10px;
+‎      border-radius: 20px;
+‎      cursor: pointer;
+‎      user-select: none;
+‎      display: flex;
+‎      align-items: center;
+‎      gap: 6px;
+‎      font-size: 14px;
+‎      z-index: 1000;
+‎    }
+‎    #langSelector img {
+‎      width: 20px;
+‎      height: 20px;
+‎    }
+‎    #langDropdown {
+‎      position: fixed;
+‎      top: 45px;
+‎      right: 15px;
+‎      background: var(--white);
+‎      border: 1px solid var(--black);
+‎      border-radius: 5px;
+‎      display: none;
+‎      flex-direction: column;
+‎      min-width: 100px;
+‎      z-index: 1000;
+‎      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+‎    }
+‎    #langDropdown div {
+‎      padding: 8px 12px;
+‎      cursor: pointer;
+‎      font-size: 14px;
+‎      color: var(--black);
+‎    }
+‎    #langDropdown div:hover {
+‎      background-color: var(--green);
+‎      color: var(--white);
+‎    }
+‎
+‎    .page {
+‎      display: none;
+‎      padding: 20px;
+‎    }
+‎
+‎    .page.active {
+‎      display: block;
+‎    }
+‎
+‎    h2 {
+‎      color: var(--black);
+‎      margin-bottom: 20px;
+‎    }
+‎
+‎    .form-group {
+‎      margin-bottom: 15px;
+‎    }
+‎
+‎    input {
+‎      width: 100%;
+‎      padding: 10px;
+‎      font-size: 16px;
+‎      border: 1px solid var(--black);
+‎      border-radius: 5px;
+‎    }
+‎
+‎    button {
+‎      padding: 12px;
+‎      font-size: 16px;
+‎      background: var(--green);
+‎      color: var(--white);
+‎      border: none;
+‎      border-radius: 5px;
+‎      width: 100%;
+‎      cursor: pointer;
+‎    }
+‎
+‎    .top-menu,
+‎    .bottom-menu {
+‎      display: flex;
+‎      justify-content: space-around;
+‎      background: var(--black);
+‎      padding: 10px 0;
+‎      color: var(--white);
+‎      user-select: none;
+‎    }
+‎
+‎    .upload-box {
+‎      border: 2px dashed var(--red);
+‎      padding: 40px;
+‎      margin: 20px 0;
+‎      text-align: center;
+‎      color: var(--black);
+‎      cursor: pointer;
+‎    }
+‎
+‎    .money-box,
+‎    .account-box {
+‎      background: var(--white);
+‎      border: 1px solid var(--black);
+‎      padding: 15px;
+‎      border-radius: 10px;
+‎      margin-top: 20px;
+‎    }
+‎
+‎    .account-img {
+‎      width: 60px;
+‎      height: 60px;
+‎      border-radius: 50%;
+‎      object-fit: cover;
+‎      border: 2px solid var(--red);
+‎    }
+‎  </style>
+‎</head>
+‎<body>
+‎
+‎  <!-- Language Selector -->
+‎  <div id="langSelector" onclick="toggleLangDropdown()">
+‎    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Globe_icon.svg/120px-Globe_icon.svg.png" alt="Language" />
+‎    <span id="selectedLang">বাংলা</span>
+‎  </div>
+‎  <div id="langDropdown">
+‎    <div onclick="setLanguage('bn')">বাংলা</div>
+‎    <div onclick="setLanguage('en')">English</div>
+‎  </div>
+‎
+‎  <!-- Sign Up Page -->
+‎  <div class="page active" id="signupPage">
+‎    <h2 data-bn="সাইন আপ করুন" data-en="Sign Up">সাইন আপ করুন</h2>
+‎    <div class="form-group">
+‎      <input type="text" id="phone" placeholder="মোবাইল নাম্বার" data-bn-placeholder="মোবাইল নাম্বার" data-en-placeholder="Phone Number" />
+‎    </div>
+‎    <div class="form-group">
+‎      <input type="password" placeholder="পাসওয়ার্ড" data-bn-placeholder="পাসওয়ার্ড" data-en-placeholder="Password" />
+‎    </div>
+‎    <div class="form-group">
+‎      <input type="password" placeholder="কনফার্ম পাসওয়ার্ড" data-bn-placeholder="কনফার্ম পাসওয়ার্ড" data-en-placeholder="Confirm Password" />
+‎    </div>
+‎    <div class="form-group">
+‎      <input type="text" placeholder="রেফারেল কোড (ঐচ্ছিক)" data-bn-placeholder="রেফারেল কোড (ঐচ্ছিক)" data-en-placeholder="Referral Code (Optional)" />
+‎    </div>
+‎    <button onclick="goToDashboard()" data-bn="সাবমিট করুন" data-en="Submit">সাবমিট করুন</button>
+‎  </div>
+‎
+‎  <!-- Dashboard Page -->
+‎  <div class="page" id="dashboard">
+‎    <div class="top-menu">
+‎      <div data-bn="উইথড্র" data-en="Withdraw">উইথড্র</div>
+‎      <div data-bn="ওয়ার্ক প্লেস" data-en="Work Place">ওয়ার্ক প্লেস</div>
+‎      <div data-bn="মাই ওয়ালেট" data-en="My Wallet">মাই ওয়ালেট</div>
+‎      <div onclick="showAccount()" data-bn="মাই একাউন্ট" data-en="My Account">মাই একাউন্ট</div>
+‎    </div>
+‎
+‎    <div class="upload-box" onclick="alert(language === 'bn' ? 'এখানে ফটো আপলোড ফিচার আসবে' : 'Photo upload feature will be here')">
+‎      + <span data-bn="ফটো যোগ করুন" data-en="Add Photo">ফটো যোগ করুন</span>
+‎    </div>
+‎
+‎    <div class="money-box">
+‎      <h3 data-bn="এড মানি" data-en="Add Money">এড মানি</h3>
+‎      <p data-bn="আপনি কোন মাধ্যমে টাকা পাঠাতে চান?" data-en="How would you like to send money?">আপনি কোন মাধ্যমে টাকা পাঠাতে চান?</p>
+‎      <ul>
+‎        <li onclick="showBkash()">বিকাশ</li>
+‎        <li onclick="showNagad()">নগদ</li>
+‎      </ul>
+‎      <p id="moneyNumber" style="color: var(--red); font-weight: bold;"></p>
+‎    </div>
+‎
+‎    <div class="account-box" id="accountBox" style="display:none;">
+‎      <h3 data-bn="আপনার একাউন্ট" data-en="Your Account">আপনার একাউন্ট</h3>
+‎      <img src="https://via.placeholder.com/60" alt="Profile" class="account-img" />
+‎      <p data-bn="নাম:" data-en="Name:">নাম: <span id="userName">User Name</span></p>
+‎      <p data-bn="মোবাইল:" data-en="Phone:">মোবাইল: <span id="userPhone">017XXXXXXXX</span></p>
+‎      <p data-bn="আপনার কাজের স্কোর:" data-en="Your work score:">আপনার কাজের স্কোর: ৫০</p>
+‎      <p style="color: gray;" data-bn="(এই কোডটি শুধু অ্যাডমিন দেখতে পাবে: #A1B2C3)" data-en="(This code is visible to admin only: #A1B2C3)">(এই কোডটি শুধু অ্যাডমিন দেখতে পাবে: #A1B2C3)</p>
+‎    </div>
+‎
+‎    <div class="bottom-menu">
+‎      <div data-bn="সেটিং" data-en="Settings">সেটিং</div>
+‎      <div data-bn="হোম" data-en="Home">হোম</div>
+‎      <div data-bn="এড মানি" data
+‎
+‎<html lang="bn">
+‎<head>
+‎  <meta charset="UTF-8" />
+‎  <title>Stylish Website / স্টাইলিশ ওয়েবসাইট</title>
+‎  <style>
+‎    :root {
+‎      --green: #2ecc71;
+‎      --red: #e74c3c;
+‎      --black: #2c3e50;
+‎      --white: #ffffff;
+‎    }
+‎
+‎    * {
+‎      margin: 0;
+‎      padding: 0;
+‎      box-sizing: border-box;
+‎      font-family: 'Arial', sans-serif;
+‎    }
+‎
+‎    body {
+‎      background-color: var(--white);
+‎      position: relative;
+‎      min-height: 100vh;
+‎    }
+‎
+‎    /* Language selector */
+‎    #langSelector {
+‎      position: fixed;
+‎      top: 15px;
+‎      right: 15px;
+‎      background: var(--black);
+‎      color: var(--white);
+‎      padding: 5px 10px;
+‎      border-radius: 20px;
+‎      cursor: pointer;
+‎      user-select: none;
+‎      display: flex;
+‎      align-items: center;
+‎      gap: 6px;
+‎      font-size: 14px;
+‎      z-index: 1000;
+‎    }
+‎    #langSelector img {
+‎      width: 20px;
+‎      height: 20px;
+‎    }
+‎    #langDropdown {
+‎      position: fixed;
+‎      top: 45px;
+‎      right: 15px;
+‎      background: var(--white);
+‎      border: 1px solid var(--black);
+‎      border-radius: 5px;
+‎      display: none;
+‎      flex-direction: column;
+‎      min-width: 100px;
+‎      z-index: 1000;
+‎      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+‎    }
+‎    #langDropdown div {
+‎      padding: 8px 12px;
+‎      cursor: pointer;
+‎      font-size: 14px;
+‎      color: var(--black);
+‎    }
+‎    #langDropdown div:hover {
+‎      background-color: var(--green);
+‎      color: var(--white);
+‎    }
+‎
+‎    .page {
+‎      display: none;
+‎      padding: 20px;
+‎    }
+‎
+‎    .page.active {
+‎      display: block;
+‎    }
+‎
+‎    h2 {
+‎      color: var(--black);
+‎      margin-bottom: 20px;
+‎    }
+‎
+‎    .form-group {
+‎      margin-bottom: 15px;
+‎    }
+‎
+‎    input {
+‎      width: 100%;
+‎      padding: 10px;
+‎      font-size: 16px;
+‎      border: 1px solid var(--black);
+‎      border-radius: 5px;
+‎    }
+‎
+‎    button {
+‎      padding: 12px;
+‎      font-size: 16px;
+‎      background: var(--green);
+‎      color: var(--white);
+‎      border: none;
+‎      border-radius: 5px;
+‎      width: 100%;
+‎      cursor: pointer;
+‎    }
+‎
+‎    .top-menu,
+‎    .bottom-menu {
+‎      display: flex;
+‎      justify-content: space-around;
+‎      background: var(--black);
+‎      padding: 10px 0;
+‎      color: var(--white);
+‎      user-select: none;
+‎    }
+‎
+‎    .upload-box {
+‎      border: 2px dashed var(--red);
+‎      padding: 40px;
+‎      margin: 20px 0;
+‎      text-align: center;
+‎      color: var(--black);
+‎      cursor: pointer;
+‎    }
+‎
+‎    .money-box,
+‎    .account-box {
+‎      background: var(--white);
+‎      border: 1px solid var(--black);
+‎      padding: 15px;
+‎      border-radius: 10px;
+‎      margin-top: 20px;
+‎    }
+‎
+‎    .account-img {
+‎      width: 60px;
+‎      height: 60px;
+‎      border-radius: 50%;
+‎      object-fit: cover;
+‎      border: 2px solid var(--red);
+‎    }
+‎  </style>
+‎</head>
+‎<body>
+‎
+‎  <!-- Language Selector -->
+‎  <div id="langSelector" onclick="toggleLangDropdown()">
+‎    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Globe_icon.svg/120px-Globe_icon.svg.png" alt="Language" />
+‎    <span id="selectedLang">বাংলা</span>
+‎  </div>
+‎  <div id="langDropdown">
+‎    <div onclick="setLanguage('bn')">বাংলা</div>
+‎    <div onclick="setLanguage('en')">English</div>
+‎  </div>
+‎
+‎  <!-- Sign Up Page -->
+‎  <div class="page active" id="signupPage">
+‎    <h2 data-bn="সাইন আপ করুন" data-en="Sign Up">সাইন আপ করুন</h2>
+‎    <div class="form-group">
+‎      <input type="text" id="phone" placeholder="মোবাইল নাম্বার" data-bn-placeholder="মোবাইল নাম্বার" data-en-placeholder="Phone Number" />
+‎    </div>
+‎    <div class="form-group">
+‎      <input type="password" placeholder="পাসওয়ার্ড" data-bn-placeholder="পাসওয়ার্ড" data-en-placeholder="Password" />
+‎    </div>
+‎    <div class="form-group">
+‎      <input type="password" placeholder="কনফার্ম পাসওয়ার্ড" data-bn-placeholder="কনফার্ম পাসওয়ার্ড" data-en-placeholder="Confirm Password" />
+‎    </div>
+‎    <div class="form-group">
+‎      <input type="text" placeholder="রেফারেল কোড (ঐচ্ছিক)" data-bn-placeholder="রেফারেল কোড (ঐচ্ছিক)" data-en-placeholder="Referral Code (Optional)" />
+‎    </div>
+‎    <button onclick="goToDashboard()" data-bn="সাবমিট করুন" data-en="Submit">সাবমিট করুন</button>
+‎  </div>
+‎
+‎  <!-- Dashboard Page -->
+‎  <div class="page" id="dashboard">
+‎    <div class="top-menu">
+‎      <div data-bn="উইথড্র" data-en="Withdraw">উইথড্র</div>
+‎      <div data-bn="ওয়ার্ক প্লেস" data-en="Work Place">ওয়ার্ক প্লেস</div>
+‎      <div data-bn="মাই ওয়ালেট" data-en="My Wallet">মাই ওয়ালেট</div>
+‎      <div onclick="showAccount()" data-bn="মাই একাউন্ট" data-en="My Account">মাই একাউন্ট</div>
+‎    </div>
+‎
+‎    <div class="upload-box" onclick="alert(language === 'bn' ? 'এখানে ফটো আপলোড ফিচার আসবে' : 'Photo upload feature will be here')">
+‎      + <span data-bn="ফটো যোগ করুন" data-en="Add Photo">ফটো যোগ করুন</span>
+‎    </div>
+‎
+‎    <div class="money-box">
+‎      <h3 data-bn="এড মানি" data-en="Add Money">এড মানি</h3>
+‎      <p data-bn="আপনি কোন মাধ্যমে টাকা পাঠাতে চান?" data-en="How would you like to send money?">আপনি কোন মাধ্যমে টাকা পাঠাতে চান?</p>
+‎      <ul>
+‎        <li onclick="showBkash()">বিকাশ</li>
+‎        <li onclick="showNagad()">নগদ</li>
+‎      </ul>
+‎      <p id="moneyNumber" style="color: var(--red); font-weight: bold;"></p>
+‎    </div>
+‎
+‎    <div class="account-box" id="accountBox" style="display:none;">
+‎      <h3 data-bn="আপনার একাউন্ট" data-en="Your Account">আপনার একাউন্ট</h3>
+‎      <img src="https://via.placeholder.com/60" alt="Profile" class="account-img" />
+‎      <p data-bn="নাম:" data-en="Name:">নাম: <span id="userName">User Name</span></p>
+‎      <p data-bn="মোবাইল:" data-en="Phone:">মোবাইল: <span id="userPhone">017XXXXXXXX</span></p>
+‎      <p data-bn="আপনার কাজের স্কোর:" data-en="Your work score:">আপনার কাজের স্কোর: ৫০</p>
+‎      <p style="color: gray;" data-bn="(এই কোডটি শুধু অ্যাডমিন দেখতে পাবে: #A1B2C3)" data-en="(This code is visible to admin only: #A1B2C3)">(এই কোডটি শুধু অ্যাডমিন দেখতে পাবে: #A1B2C3)</p>
+‎    </div>
+‎
+‎    <div class="bottom-menu">
+‎      <div data-bn="সেটিং" data-en="Settings">সেটিং</div>
+‎      <div data-bn="হোম" data-en="Home">হোম</div>
+‎      <div data-bn="এড মানি" data
+‎‎<!DOCTYPE html>
+‎<html lang="bn">
+‎<head>
+‎  <meta charset="UTF-8" />
+‎  <title>Stylish Website / স্টাইলিশ ওয়েবসাইট</title>
+‎  <style>
+‎    :root {
+‎      --green: #2ecc71;
+‎      --red: #e74c3c;
+‎      --black: #2c3e50;
+‎      --white: #ffffff;
+‎    }
+‎
+‎    * {
+‎      margin: 0;
+‎      padding: 0;
+‎      box-sizing: border-box;
+‎      font-family: 'Arial', sans-serif;
+‎    }
+‎
+‎    body {
+‎      background-color: var(--white);
+‎      position: relative;
+‎      min-height: 100vh;
+‎    }
+‎
+‎    /* Language selector */
+‎    #langSelector {
+‎      position: fixed;
+‎      top: 15px;
+‎      right: 15px;
+‎      background: var(--black);
+‎      color: var(--white);
+‎      padding: 5px 10px;
+‎      border-radius: 20px;
+‎      cursor: pointer;
+‎      user-select: none;
+‎      display: flex;
+‎      align-items: center;
+‎      gap: 6px;
+‎      font-size: 14px;
+‎      z-index: 1000;
+‎    }
+‎    #langSelector img {
+‎      width: 20px;
+‎      height: 20px;
+‎    }
+‎    #langDropdown {
+‎      position: fixed;
+‎      top: 45px;
+‎      right: 15px;
+‎      background: var(--white);
+‎      border: 1px solid var(--black);
+‎      border-radius: 5px;
+‎      display: none;
+‎      flex-direction: column;
+‎      min-width: 100px;
+‎      z-index: 1000;
+‎      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+‎    }
+‎    #langDropdown div {
+‎      padding: 8px 12px;
+‎      cursor: pointer;
+‎      font-size: 14px;
+‎      color: var(--black);
+‎    }
+‎    #langDropdown div:hover {
+‎      background-color: var(--green);
+‎      color: var(--white);
+‎    }
+‎
+‎    .page {
+‎      display: none;
+‎      padding: 20px;
+‎    }
+‎
+‎    .page.active {
+‎      display: block;
+‎    }
+‎
+‎    h2 {
+‎      color: var(--black);
+‎      margin-bottom: 20px;
+‎    }
+‎
+‎    .form-group {
+‎      margin-bottom: 15px;
+‎    }
+‎
+‎    input {
+‎      width: 100%;
+‎      padding: 10px;
+‎      font-size: 16px;
+‎      border: 1px solid var(--black);
+‎      border-radius: 5px;
+‎    }
+‎
+‎    button {
+‎      padding: 12px;
+‎      font-size: 16px;
+‎      background: var(--green);
+‎      color: var(--white);
+‎      border: none;
+‎      border-radius: 5px;
+‎      width: 100%;
+‎      cursor: pointer;
+‎    }
+‎
+‎    .top-menu,
+‎    .bottom-menu {
+‎      display: flex;
+‎      justify-content: space-around;
+‎      background: var(--black);
+‎      padding: 10px 0;
+‎      color: var(--white);
+‎      user-select: none;
+‎    }
+‎
+‎    .upload-box {
+‎      border: 2px dashed var(--red);
+‎      padding: 40px;
+‎      margin: 20px 0;
+‎      text-align: center;
+‎      color: var(--black);
+‎      cursor: pointer;
+‎    }
+‎
+‎    .money-box,
+‎    .account-box {
+‎      background: var(--white);
+‎      border: 1px solid var(--black);
+‎      padding: 15px;
+‎      border-radius: 10px;
+‎      margin-top: 20px;
+‎    }
+‎
+‎    .account-img {
+‎      width: 60px;
+‎      height: 60px;
+‎      border-radius: 50%;
+‎      object-fit: cover;
+‎      border: 2px solid var(--red);
+‎    }
+‎  </style>
+‎</head>
+‎<body>
+‎
+‎  <!-- Language Selector -->
+‎  <div id="langSelector" onclick="toggleLangDropdown()">
+‎    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Globe_icon.svg/120px-Globe_icon.svg.png" alt="Language" />
+‎    <span id="selectedLang">বাংলা</span>
+‎  </div>
+‎  <div id="langDropdown">
+‎    <div onclick="setLanguage('bn')">বাংলা</div>
+‎    <div onclick="setLanguage('en')">English</div>
+‎  </div>
+‎
+‎  <!-- Sign Up Page -->
+‎  <div class="page active" id="signupPage">
+‎    <h2 data-bn="সাইন আপ করুন" data-en="Sign Up">সাইন আপ করুন</h2>
+‎    <div class="form-group">
+‎      <input type="text" id="phone" placeholder="মোবাইল নাম্বার" data-bn-placeholder="মোবাইল নাম্বার" data-en-placeholder="Phone Number" />
+‎    </div>
+‎    <div class="form-group">
+‎      <input type="password" placeholder="পাসওয়ার্ড" data-bn-placeholder="পাসওয়ার্ড" data-en-placeholder="Password" />
+‎    </div>
+‎    <div class="form-group">
+‎      <input type="password" placeholder="কনফার্ম পাসওয়ার্ড" data-bn-placeholder="কনফার্ম পাসওয়ার্ড" data-en-placeholder="Confirm Password" />
+‎    </div>
+‎    <div class="form-group">
+‎      <input type="text" placeholder="রেফারেল কোড (ঐচ্ছিক)" data-bn-placeholder="রেফারেল কোড (ঐচ্ছিক)" data-en-placeholder="Referral Code (Optional)" />
+‎    </div>
+‎    <button onclick="goToDashboard()" data-bn="সাবমিট করুন" data-en="Submit">সাবমিট করুন</button>
+‎  </div>
+‎
+‎  <!-- Dashboard Page -->
+‎  <div class="page" id="dashboard">
+‎    <div class="top-menu">
+‎      <div data-bn="উইথড্র" data-en="Withdraw">উইথড্র</div>
+‎      <div data-bn="ওয়ার্ক প্লেস" data-en="Work Place">ওয়ার্ক প্লেস</div>
+‎      <div data-bn="মাই ওয়ালেট" data-en="My Wallet">মাই ওয়ালেট</div>
+‎      <div onclick="showAccount()" data-bn="মাই একাউন্ট" data-en="My Account">মাই একাউন্ট</div>
+‎    </div>
+‎
+‎    <div class="upload-box" onclick="alert(language === 'bn' ? 'এখানে ফটো আপলোড ফিচার আসবে' : 'Photo upload feature will be here')">
+‎      + <span data-bn="ফটো যোগ করুন" data-en="Add Photo">ফটো যোগ করুন</span>
+‎    </div>
+‎
+‎    <div class="money-box">
+‎      <h3 data-bn="এড মানি" data-en="Add Money">এড মানি</h3>
+‎      <p data-bn="আপনি কোন মাধ্যমে টাকা পাঠাতে চান?" data-en="How would you like to send money?">আপনি কোন মাধ্যমে টাকা পাঠাতে চান?</p>
+‎      <ul>
+‎        <li onclick="showBkash()">বিকাশ</li>
+‎        <li onclick="showNagad()">নগদ</li>
+‎      </ul>
+‎      <p id="moneyNumber" style="color: var(--red); font-weight: bold;"></p>
+‎    </div>
+‎
+‎    <div class="account-box" id="accountBox" style="display:none;">
+‎      <h3 data-bn="আপনার একাউন্ট" data-en="Your Account">আপনার একাউন্ট</h3>
+‎      <img src="https://via.placeholder.com/60" alt="Profile" class="account-img" />
+‎      <p data-bn="নাম:" data-en="Name:">নাম: <span id="userName">User Name</span></p>
+‎      <p data-bn="মোবাইল:" data-en="Phone:">মোবাইল: <span id="userPhone">017XXXXXXXX</span></p>
+‎      <p data-bn="আপনার কাজের স্কোর:" data-en="Your work score:">আপনার কাজের স্কোর: ৫০</p>
+‎      <p style="color: gray;" data-bn="(এই কোডটি শুধু অ্যাডমিন দেখতে পাবে: #A1B2C3)" data-en="(This code is visible to admin only: #A1B2C3)">(এই কোডটি শুধু অ্যাডমিন দেখতে পাবে: #A1B2C3)</p>
+‎    </div>
+‎
+‎    <div class="bottom-menu">
+‎      <div data-bn="সেটিং" data-en="Settings">সেটিং</div>
+‎      <div data-bn="হোম" data-en="Home">হোম</div>
+‎      <div data-bn="এড মানি" data
+‎
