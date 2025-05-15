@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stylish Multi-lang Dashboard</title>
+<style>
+  /* Basic Reset */
+  * {
+    margin: 0; padding: 0; box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  body {
+    background: #f8f9fa;
+    color: #222;
+  }
+
+  /* Container */
+  #app {
+    max-width: 900px;
+    margin: 20px auto;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+    overflow: hidden;
+  }
+
+  /* Language selector top right */
+  #lang-selector {
+    position: relative;
+    text-align: right;
+    padding: 15px 20px;
+    background: #2d2d2d;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    cursor: pointer;
+  }
+  #lang-selector .globe {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 10px;
+  }
+  #lang-options {
+    display: none;
+    position: absolute;
+    right: 20px;
+    top: 50px;
+    background: white;
+    color: black;
+    border-radius: 6px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    z-index: 10;
+  }
+  #lang-options div {
+    padding: 8px 16px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+  }
+  #lang-options div:last-child {
+    border-bottom: none;
+  }
+  #lang-options div:hover {
+    background-color: #d4edda; /* light green */
+  }
+
+  /* Pages container */
+  #page-container {
+    padding: 30px 40px 40px 40px;
+    min-height: 460px;
+  }
+
+  /* Navigation bars */
+  .top-nav, .bottom-nav {
+    display: flex;
+    justify-content: space-around;
+    background: #004d00; /* dark green */
+    padding: 15px 0;
+  }
+  .top-nav button, .bottom-nav button {
+    background: transparent;
+    border: none;
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 6px;
+    transition: background-color 0.3s ease;
+  }
+  .top-nav button:hover, .bottom-nav button:hover {
+    background-color: #b30000; /* red hover */
+  }
+  .top-nav button.active, .bottom-nav button.active {
+    background-color: #e60000; /* bright red */
+  }
+
+  /* Icons: simple circles with letters */
+  .icon-circle {
+    width: 24px; height: 24px;
+    background: #000;
+    border-radius: 50%;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 14px;
+  }
+
+  /* Registration form */
+  form {
+    max-width: 420px;
+    margin: 0 auto;
+  }
+  label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+  input[type="text"], input[type="password"], input[type="tel"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 18px;
+    border: 2px solid #004d00;
+    border-radius: 6px;
+    font-size: 15px;
+  }
+  input[type="submit"] {
+    background-color: #004d00;
+    color: white;
+    font-weight: 700;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+  }
+  input[type="submit"]:hover {
+    background-color: #b30000;
+  }
+
+  /* Dashboard content area */
+  .content-section {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  /* Add Money page style */
+  .payment-option {
+    border: 2px solid #004d00;
+    border-radius: 8px;
+    padding: 15px 25px;
+    margin: 15px 0;
+    cursor: pointer;
+    font-weight: 700;
+    color: #004d00;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: background-color 0.3s ease;
+  }
+  .payment-option.selected, .payment-option:hover {
+    background-color: #004d00;
+    color: white;
+  }
+  .number-input {
+    margin-top: 10px;
+  }
+  .number-input input {
+    width: 100%;
+    font-size: 16px;
+    padding: 8px;
+    border-radius: 6px;
+    border: 2px solid #004d00;
+  }
+
+  /* Profile circle */
+  .profile-pic {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #004d00;
+  }
+
+  /* Account info table */
+  table.account-info {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  table.account-info th, table.account-info td {
+    border: 1px solid #004d00;
+    padding: 10px 12px;
+    text-align: left;
+  }
+  table.account-info th {
+    background-color: #b30000;
+    color: white;
+  }
+
+  /* Responsive */
+  @media (max-width: 650px) {
+    #app {
+      margin: 10px;
+    }
+    #page-container {
+      padding: 20px;
+    }
+    .top-nav, .bottom-nav {
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <!-- Language Selector -->
+  <div id="lang-selector" tabindex="0" aria-label="Select Language">
+    <span class="globe">🌐</span>
+    <span id="current-lang">English</span>
+    <div id="lang-options" role="listbox" aria-activedescendant="lang-en">
+      <div id="lang-en" role="option" tabindex="0" data-lang="en">English</div>
+      <div id="lang-bn" role="option" tabindex="0" data-lang="bn">বাংলা</div>
+    </div>
+  </div>
+
+  <!-- Page Container -->
+  <div id="page-container">
+    <!-- Initial: Registration Form -->
+    <form id="register-form" aria-label="Registration Form">
+      <h2 data-i18n="register_title">Register</h2>
+      <label for="phone" data-i18n="phone_label">Mobile Number</label>
+      <input type="tel" id="phone" name="phone" placeholder="01XXXXXXXXX" required pattern="[0-9]{11}" aria-required="true" aria-describedby="phoneHelp" />
+      <label for="password" data-i18n="password_label">Password</label>
+      <input type="password" id="password" name="password" placeholder="Password" required aria-required="true" />
+      <label for="confirm-password" data-i18n="confirm_password_label">Confirm Password</label>
+      <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm Password" required aria-required="true" />
+      <label for="referral" data-i18n="referral_code_label">Referral Code (optional)</label>
+      <input type="text" id="referral" name="referral" placeholder="Referral Code (Optional)" />
+      <input type="submit" value="Register" data-i18n="register_button" />
+    </form>
+  </div>
+
+  <!-- Navigation Bars -->
+  <nav class="top-nav" aria-label="Top Navigation" style="display:none;">
+    <button id="nav-withdraw" class="active" data-i18n="nav_withdraw"><span class="icon-circle">W</span> Withdraw</button>
+    <button id="nav-workplace" data-i18n="nav_workplace"><span class="icon-circle">WP</span> Work Place</button>
+    <button id="nav-wallet" data-i18n="nav_wallet"><span class="icon-circle">MW</span> My Wallet</button>
+    <button id="nav-account" data-i18n="nav_account"><span class="icon-circle">MA</span> My Account</button>
+  </nav>
+
+  <nav class="bottom-nav" aria-label="Bottom Navigation" style="display:none;">
+    <button id="nav-settings" data-i18n="nav_settings"><span class="icon-circle">S</span> Settings</button>
+    <button id="nav-home" data-i18n="nav_home"><span class="icon-circle">H</span> Home</button>
+    <button id="nav-addmoney" data-i18n="nav_addmoney"><span class="icon-circle">A</span> Add Money</button>
+    <button id="nav-company" data-i18n="nav_company"><span class="icon-circle">C</span> Company Details</button>
+  </nav>
+</div>
+
+<script>
+  // Language Data for translation
+  const translations = {
+    en: {
+      register_title: "Register",
+      phone_label: "Mobile Number",
+      password_label: "Password",
+      confirm_password_label: "Confirm Password",
+      referral_code_label: "Referral Code (optional)",
+      register_button: "Register",
+      nav_withdraw: "Withdraw",
+      nav_workplace: "Work Place",
+      nav_wallet: "My Wallet",
+      nav_account: "My Account",
+      nav_settings: "Settings",
+      nav_home: "Home",
+      nav_addmoney: "Add Money",
+      nav_company: "Company Details",
+
+      // Withdraw Page
+      withdraw_title: "Withdraw",
+      withdraw_phone_label: "Phone Number",
+      withdraw_password_label: "Password",
+      withdraw_amount_label: "Amount",
+      withdraw_confirm_label: "Confirm",
+      withdraw_submit: "Submit",
+
+      // Work Place Page
+      workplace_title: "Work Place",
+      workplace_info: "Work Place Content Here",
+
+      // My Wallet Page
+      wallet_title: "My Wallet",
+      wallet_info: "My Wallet Content Here",
+
+      // My Account Page
+      account_title: "My Account",
+      account_name_label: "Name",
+      account_phone_label: "Phone Number",
+      account_profile_label: "Profile Picture",
+      account_balance_label: "Current Balance",
+      account_history_label: "Activity History",
+
+      // Settings Page
+      settings_title: "Settings",
+      settings_info: "Settings Content Here",
+
+      // Home Page
+      home_title: "Home",
+      home_info: "Home Content Here",
+
+      // Add Money Page
+      addmoney_title: "Add Money",
+      addmoney_select_label: "Select Payment Method",
+      addmoney_bkash: "Bkash",
+      addmoney_nagad: "Nagad",
+      addmoney_number_label: "Number",
+      addmoney_save_button: "Save",
+
+      // Company Details Page
+      company_title: "Company Details",
+      company_info: "Company Details Content Here",
+    },
+    bn: {
+      register_title: "রেজিস্ট্রেশন",
+      phone_label: "মোবাইল নাম্বার",
+      password_label: "পাসওয়ার্ড",
+      confirm_password_label: "পাসওয়ার্ড নিশ্চিত করুন",
+      referral_code_label: "রেফারেল কোড (ঐচ্ছিক)",
+      register_button: "রেজিস্টার করুন",
+      nav_withdraw: "উইথড্র",
+      nav_workplace: "ওয়ার্ক প্লেস",
+      nav_wallet: "মাই ওয়ালেট",
+      nav_account: "মাই একাউন্ট",
+      nav_settings: "সেটিংস",
+      nav_home: "হোম",
+      nav_addmoney: "এড মানি",
+      nav_company: "কোম্পানি ডিটেলস",
+
+      withdraw_title: "উইথড্র",
+      withdraw_phone_label: "ফোন নম্বর",
+      withdraw_password_label: "পাসওয়ার্ড",
+      withdraw_amount_label: "পরিমাণ",
+      withdraw_confirm_label: "নিশ্চিত করুন",
+      withdraw_submit: "সাবমিট",
+
+      workplace_title: "ওয়ার্ক প্লেস",
+      workplace_info: "ওয়ার্ক প্লেস এর বিষয়বস্তু এখানে থাকবে",
+
+      wallet_title: "মাই ওয়ালেট",
+      wallet_info: "মাই ওয়ালেট এর বিষয়বস্তু এখানে থাকবে",
+
+      account_title: "মাই একাউন্ট",
+      account_name_label: "নাম",
+      account_phone_label: "ফোন নম্বর",
+      account_profile_label: "প্রোফাইল ছবি",
+      account_balance_label: "বর্তমান হিসাব",
+      account_history_label: "কার্যকলাপ",
+
+      settings_title: "সেটিংস",
+      settings_info: "সেটিংস এর বিষয়বস্তু এখানে থাকবে",
+
+      home_title: "হোম",
+      home_info: "হোম এর বিষয়বস্তু এখানে থাকবে",
+
+      addmoney_title: "এড মানি",
+      addmoney_select_label: "পেমেন্ট পদ্ধতি নির্বাচন করুন",
+      addmoney_bkash: "বিকাশ",
+      addmoney_nagad: "নগদ",
+      addmoney_number_label: "নম্বর",
+      addmoney_save_button: "সেভ করুন",
+
+      company_title: "কোম্পানি ডিটেলস",
+      company_info: "কোম্পানি ডিটেলস এর বিষয়বস্তু এখানে থাকবে",
+    }
+  };
+
+  let currentLang = 'en';
+
+  // Elements
+  const langSelector = document.getElementById('lang-selector');
+  const langOptions = document.getElementById('lang-options');
+  const currentLangSpan = document.getElementById('current-lang');
+  const pageContainer = document.getElementById('page-container');
+  const topNav = document.querySelector('.top-nav');
+  const bottomNav = document.querySelector('.bottom-nav');
+
+  // Show/hide language options on click
+  langSelector.addEventListener('click', () => {
+    langOptions.style.display = langOptions.style.display === 'block' ? 'none' : 'block';
+  });
+
+  // Change language when option clicked
+  langOptions.querySelectorAll('div').forEach(el => {
+    el.addEventListener('click', () => {
+      const selectedLang = el.getAttribute('data-lang');
+      changeLanguage(selectedLang);
+      langOptions.style.display = 'none';
+    });
+  });
+
+  // Click outside closes lang options
+  document.addEventListener('click', e => {
+    if (!langSelector.contains(e.target)) {
+      langOptions.style.display = 'none';
+    }
+  });
+
+  // Change language function
+  function changeLanguage(lang) {
+    currentLang = lang;
+    currentLangSpan.textContent = lang === 'en' ? 'English' : 'বাংলা';
+    // Translate all elements with data-i18n attribute
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      el.textContent = translations[lang][key] || el.textContent;
+      // For input placeholders & buttons:
+      if (el.tagName === 'INPUT') {
+        if(el.type === 'submit') {
+          el.value = translations[lang][key] || el.value;
+        } else if(el.placeholder) {
+          el.placeholder = translations[lang][key] || el.placeholder;
+        }
+      }
+    });
+    // Translate placeholders separately
+    if(lang === 'bn') {
+      document.getElementById('phone').placeholder = '০১XXXXXXXXX';
+      document.getElementById('password').placeholder = 'পাসওয়ার্ড';
+      document.getElementById('confirm-password').placeholder = 'পাসওয়ার্ড নিশ্চিত করুন';
+      document.getElementById('referral').placeholder = 'রেফারেল কোড (ঐচ্ছিক)';
+    } else {
+      document.getElementById('phone').placeholder = '01XXXXXXXXX';
+      document.get
